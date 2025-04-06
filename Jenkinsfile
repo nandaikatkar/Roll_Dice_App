@@ -12,19 +12,31 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/nandaikatkar/Roll_Dice_App.git'
             }
         }
+
         stage('Flutter Pub Get') {
             steps {
-                sh 'flutter pub get'
+                sh '''
+                #!/bin/bash
+                flutter pub get
+                '''
             }
         }
+
         stage('Analyze') {
             steps {
-                sh 'flutter analyze'
+                sh '''
+                #!/bin/bash
+                flutter analyze
+                '''
             }
         }
+
         stage('Build APK') {
             steps {
-                sh 'flutter build apk --release'
+                sh '''
+                #!/bin/bash
+                flutter build apk --release
+                '''
             }
         }
     }
