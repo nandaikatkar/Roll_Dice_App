@@ -41,6 +41,12 @@ pipeline {
                 '''
             }
         }
+         stage('Archive APK') {
+            steps {
+                echo "Building artifacts"
+                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+            }
+        }
     }
 
     post {
