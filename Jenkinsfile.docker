@@ -28,7 +28,9 @@ pipeline {
                 script {
                     dockerImage.inside {
                         // Fix git safe directory issue
-                        sh 'git config --global --add safe.directory /sdks/flutter'
+                       
+                        sh 'git config --add safe.directory /sdks/flutter'
+
 
                         // Optional: fix permissions if needed (use with caution)
                         sh 'sudo chown -R $(whoami):$(whoami) /sdks/flutter || true'
