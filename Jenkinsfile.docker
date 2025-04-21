@@ -14,13 +14,12 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                echo "🐳 Building Docker image"
-                script {
-                    dockerImage = docker.build("${IMAGE_NAME}")
-                }
-            }
+        steps {
+            echo "🐳 Building Docker image"
+            sh 'docker build -t flutter-app-builder .'
         }
+    }
+
 
         stage('Run Flutter Commands in Docker') {
             steps {
