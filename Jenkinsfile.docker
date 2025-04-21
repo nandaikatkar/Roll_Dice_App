@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'flutter-firstapp'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "📥 Cloning repository"
+                git branch: 'main', url: 'https://github.com/nandaikatkar/Roll_Dice_App.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "🐳 Building Docker image"
+                script {
+                    dockerImage = docker.build("${IMAGE_NAME}")
+                }
+            }
+        }
+
+        stage('Run Flutter Commands in Docker') {
+            steps {
+                echo "🚀 Running flutter pub get, analyze, and build in container"
+                script {
+                    dockerImage.inside {
+                        sh 'flutter pub get'
+                        sh 'flutter analyze'
+                        sh 'flutter build apk --release'
+                    }
+                }
+            }
+        }
+
+        stage('Archive APK') {
+            steps {
+                echo "📦 Archiving APK"
+                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Docker Build Successful!'
+        }
+        failure {
+            echo '❌ Docker Build Failed.'
+        }
+    }
+}
