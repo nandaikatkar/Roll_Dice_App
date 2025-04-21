@@ -27,6 +27,13 @@ pipeline {
                 echo "🚀 Running flutter pub get, analyze, and build in container"
                 script {
                     dockerImage.inside {
+                        // Fix git safe directory issue
+                        sh 'git config --global --add safe.directory /sdks/flutter'
+
+                        // Optional: fix permissions if needed (use with caution)
+                        sh 'sudo chown -R $(whoami):$(whoami) /sdks/flutter || true'
+
+                        // Run flutter commands
                         sh 'flutter pub get'
                         sh 'flutter analyze'
                         sh 'flutter build apk --release'
