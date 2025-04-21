@@ -11,20 +11,16 @@ ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:/flutter/bin
 
 # Install Android SDK command line tools
-RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
-    cd ${ANDROID_SDK_ROOT}/cmdline-tools && \
+RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools/latest && \
+    cd ${ANDROID_SDK_ROOT}/cmdline-tools/latest && \
     wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip && \
-    unzip tools.zip && rm tools.zip && \
-    mv cmdline-tools latest
+    unzip tools.zip && rm tools.zip
 
 # Install Flutter SDK
 RUN git clone https://github.com/flutter/flutter.git -b stable /flutter
 ENV PATH="/flutter/bin:/flutter/bin/cache/dart-sdk/bin:$PATH"
 
-# Run Flutter doctor to fetch dependencies
-RUN flutter doctor
-
-# Accept licenses
+# Accept licenses (must come after sdkmanager path is available)
 RUN yes | flutter doctor --android-licenses
 
 # Install required SDK packages
