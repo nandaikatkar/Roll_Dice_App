@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'flutter-firstapp'
+        IMAGE_NAME = 'flutter-app-builder'
     }
 
     stages {
@@ -14,12 +14,13 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-        steps {
-            echo "🐳 Building Docker image"
-            sh 'docker build -t flutter-app-builder .'
+            steps {
+                echo "🐳 Building Docker image"
+                script {
+                    dockerImage = docker.build("${IMAGE_NAME}")
+                }
+            }
         }
-    }
-
 
         stage('Run Flutter Commands in Docker') {
             steps {
