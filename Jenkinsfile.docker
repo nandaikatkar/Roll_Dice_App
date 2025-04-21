@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'flutter-app-builder'
+        IMAGE_NAME = 'flutter-app-builder-fixed'
     }
 
     stages {
@@ -26,14 +26,8 @@ pipeline {
             steps {
                 echo "🚀 Running flutter pub get, analyze, and build in container"
                 script {
-                    dockerImage.inside {
-                        // Fix git safe directory issue
-                       
-                        sh 'git config --add safe.directory /sdks/flutter'
-
-
-                        // Optional: fix permissions if needed (use with caution)
-                        sh 'sudo chown -R $(whoami):$(whoami) /sdks/flutter || true'
+                    dockerImage.inside('-u 122:124') {
+                        // No need to set safe directory anymore; it's set in the Docker image
 
                         // Run flutter commands
                         sh 'flutter pub get'
